@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.js"></script>
+<body>
+
+<div class="container">
+	<h1>Orders Partial!</h1>
+
+	<div class="body">
+		<h3>Add a new order</h3>
+		
+
+		<form>
+			<select ng-model="ordersCtrl.order.name">
+				<option ng-repeat="customer in ordersCtrl.customers track by $index" ng-value="customer"  ng-bind="customer">  </option>
+			</select>
+
+			<input type="number" ng-model="ordersCtrl.order.qty">
+
+			<select ng-model="ordersCtrl.order.product">
+				<option>Nike</option>
+				<option>Adidas</option>
+				<option>Reebok</option>
+				<option>New Balance</option>
+				<option>Fila</option>
+			</select>
+
+			<button ng-click="ordersCtrl.create(ordersCtrl.order)">Order</button>
+		</form>
+
+
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Product</th>
+					<th>Qty</th>
+					<th>Date</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr ng-repeat="order in ordersCtrl.orders track by $index">
+					<td ng-bind="order.name">Name</td>
+					<td ng-bind="order.product">Product</td>
+					<td ng-bind="order.qty">Qty</td>
+					<td ng-bind="order.created_at | date: date">Created date</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+</head>
+</body>
+</html>

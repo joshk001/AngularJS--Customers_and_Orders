@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Customer Partial</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+</head>
+<body>
+
+
+
+<div class="container">
+	<h1>Customers</h1>
+	<p>Step1: Insert Customer's Name to Order</p>
+	<p>Step2: Go to Orders tab, and order under specified name</p>
+	<br>
+
+
+	<h3>Add new customer</h3>
+
+	<form>
+		<input type="text" ng-model="name">
+		<button class="btn btn-info" ng-click="customersCtrl.add(name)">Add Customer</button>
+	</form>
+
+	<li ng-repeat="customer in customersCtrl.customers track by $index">
+		<span ng-bind="customer"></span>
+	</li>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myAngularModule">
+<head>
+	<meta charset="UTF-8">
+	<title>Angular Ministore</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+	<script src="lib/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="lib/angular/angular.js"></script>
+    <script type="text/javascript" src="lib/angular/angular-route.js"></script>
+	<script type="text/javascript">
+
+		var angularObject = angular.module('myAngularModule', ['ngRoute']);
+
+		angularObject.config(function($routeProvider){
+			$routeProvider
+			.when('/', { 
+				redirectTo: '/customers'
+			})
+			.when('/customers', { 
+				templateUrl: 'partials/customers.html',
+				controller: 'CustomersController',
+				controllerAs: 'customersCtrl'
+			})
+			.when('/orders', { 
+				templateUrl: 'partials/orders.html',
+				controller: 'OrdersController',
+				controllerAs: 'ordersCtrl'
+
+			})
+			.otherwise({
+				redirectTo: '/customers'
+			})
+		});
+
+//-------------------------------------------------
+//				Factory
+//-------------------------------------------------
+		angularObject.factory("CustomerFactory", function(){
+			var customers  = [];
+			var factory = {
+				add: function(name){
+					console.log("Invoked CustomerFactory.Add", name);
+					customers.push(name);
+				},
+				getCustomers: function(callback){
+					callback(customers);
+				}
+			}
+			return factory;
+		})
+		angularObject.factory("OrderFactory", function(){
+			var orders  = [];
+			var factory = {
+				add: function(order, callback){
+					orders.push(order);
+					console.log("We in the factory", orders);
+					callback();
+				},
+				getOrders: function(callback){
+					callback(orders);
+				}
+			}
+			return factory;
+		})
+
+//-------------------------------------------------
+//				Controller
+//-------------------------------------------------
+		angularObject.controller("CustomersController", function(CustomerFactory){
+			console.log("CustomersController Loaded");
+			var _this = this;
+			this.add = function(name){
+				console.log('name', name);
+				CustomerFactory.add(name)
+			}
+			CustomerFactory.getCustomers(function(customers){
+				_this.customers = customers
+			});
+		})
+
+		angularObject.controller("OrdersController", function(CustomerFactory,OrderFactory){
+			console.log("OrdersController Loaded");
+			var _this = this;
+			CustomerFactory.getCustomers(
+				function(customers){
+					_this.customers = customers
+				}
+			);
+			OrderFactory.getOrders(function(orders){
+				_this.orders = orders;
+			})
+
+			this.create = function(order){
+				console.log("order", order);
+				order.created_at = Date.now();
+				OrderFactory.add(order, function(){
+					
+					OrderFactory.getOrders(function(orders){
+						_this.orders = orders;
+						console.log("In add callback", _this.orders);
+						_this.order = {};
+					})
+				});
+				// this.order = {};
+				// OrderFactory.getOrders(function(orders){
+				// 	_this.orders = orders;
+				// })
+			}
+		})
+
+
+	</script>
+</head>
+<body>
+	
+	<a href='#/customers'>Customers  |  </a>
+	<a href='#/orders'>Orders</a>
+	<div ng-view ></div>
+
+
+
+</body>
+</html>
